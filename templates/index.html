@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evil Shop</title>
+  <style>
+    @font-face {
+      font-fam: Evil;
+      scr: url('https://mail.yandex.ru/message_part/ofont.ru_Ebbe.ttf?_uid=438318209&name=ofont.ru_Ebbe.ttf&hid=1.1&ids=189432659326271928')
+      }
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #f4f4f4;
+    }
+    header {
+      background-color: #111;
+      color: white;
+      padding: 30px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: bold;
+    }
+    .logo {
+      background: url('https://mail.yandex.ru//message_part/Frame+99.png?_uid=438318209&hid=1.1.2&ids=189432659326271925&name=Frame+99.png&yandex_class=yandex_inline_content_320.mail:438318209.E13800296:19289305394420134649458862018_1.1.2_189432659326271925') center/cover no-repeat;
+      height : 90px;
+      width : 55px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+<!--    .logo h3 {-->
+<!--      font-size: 36px;-->
+<!--      margin-center: 0px;-->
+<!--      color: white;-->
+<!--      text-align:right;-->
+    }
+    .banner {
+      background: url('https://i.ytimg.com/vi/yRVY3_nxWn8/maxresdefault.jpg') center/cover no-repeat;
+      height: 900px;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .banner h1 {
+      font-size: 36px;
+      color: black;
+      margin-bottom: -500px;
+      background-color: white;
+      font-fam: Evil;
+    }
+<!--    .banner button {-->
+<!--      padding: 10px 20px;-->
+<!--      background-color: #333;-->
+<!--      color: white;-->
+<!--      border: none;-->
+<!--      cursor: pointer;-->
+<!--    }-->
+    .products {
+      padding: 40px;
+      text-align: center;
+    }
+    .products h2 {
+      margin-bottom: 30px;
+    }
+    .product-grid {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    .product {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 472px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .product img {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+    </div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Catalog</a>
+      <a href="#">Cart</a>
+    </nav>
+  </header>
+
+  <div class="banner">
+    <h1>Let's make more evil together</h1>
+  </div>
+
+  <div class="products">
+    <h2>Featured products</h2>
+    <div class="product-grid">
+      <div class="product">
+        <img src="https://s186.convertio.me/p/32Wi4AduiLAntXiJeZo2Sw/58f3c879d4e6c21cb5d91e5bf34514f8/Rollercoaster135.png" alt="T-shirt 1">
+      </div>
+      <div class="product">
+        <img src="https://s178.convertio.me/p/Od0JIhgdz3O-ifnEnRKyWA/58f3c879d4e6c21cb5d91e5bf34514f8/Age_Accelerator-inator.png" alt="T-shirt 2">
+      </div>
+      <div class="product">
+        <img src="https://s184.convertio.me/p/viYh7DMmrVewUraO2dfqQQ/58f3c879d4e6c21cb5d91e5bf34514f8/Heinz_presents_his_Deflate-inator_1.png" alt="T-shirt 3">
+      </div>
+      <div class="product">
+        <img src="https://s175.convertio.me/p/SR0R-lHOoQoKZPGME-2_mA/58f3c879d4e6c21cb5d91e5bf34514f8/Destruct-inator_1.png" alt="T-shirt 4">
+      </div>
+    </div>
+  </div>
+</body>
+</html>
