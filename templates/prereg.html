@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход или регистрация</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black url('img/fon1.png') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 15px;
+            background-color: black;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="box">
+        <h1>У ВАС ЕСТЬ АККАУНТ</h1>
+        <button class="button" onclick="location.href='login'">ДА, ВОЙТИ В АККАУНТ</button>
+        <button class="button" onclick="location.href='register'">НЕТ, ЗАРЕГИСТРИРОВАТЬСЯ</button>
+    </div>
+</div>
+
+</body>
+</html>

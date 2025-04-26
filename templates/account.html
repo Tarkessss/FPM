@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1c1c1c;
+            font-family: 'Arial', sans-serif;
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100vh;
+            padding: 0 50px;
+        }
+
+        .text {
+            max-width: 60%;
+            font-size: 178px;
+            font-weight: bold;
+        }
+
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 830px;
+            height: 830px;
+            background: linear-gradient(135deg, #8000ff, #cc00ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar img {
+            width: 1000px;
+            height: 1000px;
+        }
+
+        .buttons {
+            margin-top: 40px;
+            display: flex;
+            gap: 60px;
+        }
+
+        .button {
+            background: #8000ff;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 150px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.3s;
+        }
+
+        .button:hover {
+            background: #a600ff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="text">
+        Hello<br>
+        username<br>
+        your in our<br>
+        Evil shoop
+    </div>
+
+    <div class="profile">
+        <div class="avatar">
+            <img src="https://mail.yandex.ru/message_part/Group+2087327983.png?_uid=438318209&hid=1.1.2&ids=189432659326271948&name=Group+2087327983.png&yandex_class=yandex_inline_content_320.mail:438318209.E13986134:1580030248146822501830954146950_1.1.2_189432659326271948" alt="User Icon">
+        </div>
+
+        <div class="buttons">
+            <button class="button" onclick="location.href='logout'">Выйти</button>
+            <button class="button" onclick="location.href='/'">Главная</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

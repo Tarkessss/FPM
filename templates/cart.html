@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Корзина</title>
+</head>
+<body>
+    <h1>Ваша корзина</h1>
+    <ul>
+        {% for item in cart_items %}
+            <li>{{ item.product_name }} ({{ item.quantity }})</li>
+        {% endfor %}
+    </ul>
+    <a href="/profile">Назад в профиль</a>
+</body>
+</html>
