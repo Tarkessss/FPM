@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Evil Shop</title>
   <style>
-    @font-face {
+        @font-face {
       font-fam: Evil;
       scr: url('https://mail.yandex.ru/message_part/ofont.ru_Ebbe.ttf?_uid=438318209&name=ofont.ru_Ebbe.ttf&hid=1.1&ids=189432659326271928')
       }
@@ -39,14 +39,14 @@
       align-items: center;
       text-align: center;
     }
-<!--    .logo h3 {-->
-<!--      font-size: 36px;-->
-<!--      margin-center: 0px;-->
-<!--      color: white;-->
-<!--      text-align:right;-->
+    .logo h3 {
+      font-size: 36px;
+      margin-center: 0px;
+      color: white;
+      text-align:right;
     }
     .banner {
-      background: url('https://i.ytimg.com/vi/yRVY3_nxWn8/maxresdefault.jpg') center/cover no-repeat;
+      background: url('img/df_banner.jpg');
       height: 900px;
       color: white;
       display: flex;
@@ -62,13 +62,13 @@
       background-color: white;
       font-fam: Evil;
     }
-<!--    .banner button {-->
-<!--      padding: 10px 20px;-->
-<!--      background-color: #333;-->
-<!--      color: white;-->
-<!--      border: none;-->
-<!--      cursor: pointer;-->
-<!--    }-->
+    .banner button {
+      padding: 10px 20px;
+      background-color: #333;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
     .products {
       padding: 40px;
       text-align: center;
@@ -91,7 +91,6 @@
     }
     .product img {
       width: 100%;
-    }
   </style>
 </head>
 <body>
@@ -111,20 +110,17 @@
 
   <div class="products">
     <h2>Featured products</h2>
-    <div class="product-grid">
-      <div class="product">
-        <img src="https://s186.convertio.me/p/32Wi4AduiLAntXiJeZo2Sw/58f3c879d4e6c21cb5d91e5bf34514f8/Rollercoaster135.png" alt="T-shirt 1">
-      </div>
-      <div class="product">
-        <img src="https://s178.convertio.me/p/Od0JIhgdz3O-ifnEnRKyWA/58f3c879d4e6c21cb5d91e5bf34514f8/Age_Accelerator-inator.png" alt="T-shirt 2">
-      </div>
-      <div class="product">
-        <img src="https://s184.convertio.me/p/viYh7DMmrVewUraO2dfqQQ/58f3c879d4e6c21cb5d91e5bf34514f8/Heinz_presents_his_Deflate-inator_1.png" alt="T-shirt 3">
-      </div>
-      <div class="product">
-        <img src="https://s175.convertio.me/p/SR0R-lHOoQoKZPGME-2_mA/58f3c879d4e6c21cb5d91e5bf34514f8/Destruct-inator_1.png" alt="T-shirt 4">
-      </div>
-    </div>
+      <form method="POST" action="/product_view">
+        <div class="product-grid">
+              {% for product in products %}
+                <div class="product">
+                  <img src="">
+                  <p class="prodct_name">{{product['name']}}</p>
+                  <button type="submit" name="pr_button" value="{{ product['id'] }}">Подробнее</button>
+                </div>
+              {% endfor %}
+        </div>
+      </form>
   </div>
 </body>
 </html>
