@@ -19,19 +19,19 @@ except Exception as e:
     products = []
     logging.info(e)
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
-    if request.method == 'POST':
-        product = request.form['pr_button']
-        if product:
-            return redirect(url_for('product_view', product=product))
     return render_template('index.html', products=products)
 
 
-@app.route('/product_view', methods=['GET', 'POST'])
-def product_view():
-    product_id = request.args.get('product')
-    return render_template('product.html', product_id=product_id)
+@app.route('/product_view/<int:product_id>', methods=['GET', 'POST'])
+def product_view(product_id):
+    con = sqlite3.connect("instance/marketplace.db")
+    cur = con.cursor()
+    product_data = cur.execute("""SELECT name, description, price
+     FROM product WHERE id = ?""", (product_id, )).fetchall()
+    return render_template('product.html',
+                           product_data=product_data[0])
 
 
 @app.route('/catalog')

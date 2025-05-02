@@ -110,17 +110,17 @@
 
   <div class="products">
     <h2>Featured products</h2>
-      <form method="POST" action="/product_view">
         <div class="product-grid">
               {% for product in products %}
-                <div class="product">
-                  <img src="">
-                  <p class="prodct_name">{{product['name']}}</p>
-                  <button type="submit" name="pr_button" value="{{ product['id'] }}">Подробнее</button>
-                </div>
+                <form method="POST" action="/product_view/{{ product['id'] }}">
+                  <div class="product">
+                    <img src="">
+                    <p class="prodct_name">{{product['name']}}</p>
+                    <button type="submit" name="pr_button" value="{{ product['id'] }}">Подробнее</button>
+                  </div>
+                </form>
               {% endfor %}
         </div>
-      </form>
   </div>
 </body>
 </html>
