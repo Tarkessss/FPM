@@ -37,7 +37,7 @@
             font-weight: bold;
         }
         .logo {
-            background: url('https://mail.yandex.ru//message_part/Frame+99.png?_uid=438318209&hid=1.1.2&ids=189432659326271925&name=Frame+99.png&yandex_class=yandex_inline_content_320.mail:438318209.E13800296:19289305394420134649458862018_1.1.2_189432659326271925') center/cover no-repeat;
+            background: url('/static/img/logo.png') center/cover no-repeat;
             height : 90px;
             width : 55px;
             color: white;
@@ -68,7 +68,7 @@
             text-align: center;
         }
         .banner2 {
-            background: url('https://mail.yandex.ru/message_part/Frame+122%281%29.png?_uid=438318209&name=Frame+122%281%29.png&hid=1.1&ids=189432659326271960&no_disposition=y&exif_rotate=y') center/cover no-repeat;
+            background: url('/static/img/banner2.png') center/cover no-repeat;
             background-size: cover;
 <!--            background-attachment: fixed;-->
             color: white;
@@ -83,7 +83,7 @@
 <!--            box-sizing: border-box;-->
         }
             .banner3 {
-        background: url('https://mail.yandex.ru/message_part/Frame+123.png?_uid=438318209&name=Frame+123.png&hid=1.1&ids=189432659326271962&no_disposition=y&exif_rotate=y') center/cover no-repeat;
+        background: url('/static/img/banner3.png') center/cover no-repeat;
         height: 500px;
         color: white;
         display: flex;
@@ -171,22 +171,15 @@
 <div class="products">
     <div class="banner2">
         <div class="product-grid">
-            <div class="product">
-                <img src="https://resize.yandex.net/mailservice?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fphineasandferb%2Fimages%2Fb%2Fbd%2FRollercoaster135.jpg%2Frevision%2Flatest%2Fscale-to-width-down%2F200%3Fcb%3D20120122101503&proxy=yes&key=2ab05fa2a5464f2559cc27ad76a50c02"
-                     alt="T-shirt 1">
-            </div>
-            <div class="product">
-                <img src="https://resize.yandex.net/mailservice?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fphineasandferb%2Fimages%2F6%2F63%2FDestruct-inator.png%2Frevision%2Flatest%2Fscale-to-width-down%2F200%3Fcb%3D20100918224313&proxy=yes&key=b10eecd112a677b94e62d47f5499176a"
-                     alt="T-shirt 2">
-            </div>
-            <div class="product">
-                <img src="https://resize.yandex.net/mailservice?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fphineasandferb%2Fimages%2Ff%2Ff2%2FHeinz_presents_his_Deflate-inator.jpg%2Frevision%2Flatest%2Fscale-to-width-down%2F200%3Fcb%3D20120203220917&proxy=yes&key=6b1810fc026385d26d427cc33cb2a470"
-                     alt="T-shirt 3">
-            </div>
-            <div class="product">
-                <img src="https://resize.yandex.net/mailservice?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fphineasandferb%2Fimages%2F9%2F9c%2FAge_Accelerator-inator.png%2Frevision%2Flatest%2Fscale-to-width-down%2F200%3Fcb%3D20100812231818&proxy=yes&key=94c684e17fc9313d44a28e8f9530d288"
-                     alt="T-shirt 4">
-            </div>
+            {% for product in products %}
+            <form method="POST" action="/product_view/{{ product['id'] }}">
+                <div class="product">
+                    <img src="">
+                    <p class="prodct_name">{{product['name']}}</p>
+                    <button type="submit" name="pr_button" value="{{ product['id'] }}">Подробнее</button>
+                </div>
+            </form>
+            {% endfor %}
         </div>
     </div>
 </div>

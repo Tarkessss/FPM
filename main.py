@@ -1,37 +1,102 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from flask_sqlalchemy import SQLAlchemy
+import sqlite3
+import logging
+from contextlib import closing
 
+# Настройка приложения
 app = Flask(__name__)
 app.secret_key = 'super-secret-key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shop.db'  # Файл БД
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+DATABASE = 'instance/marketplace.db'
 
-db = SQLAlchemy(app)
+# Настройка логирования
+logging.basicConfig(level=logging.DEBUG)
 
-# Модель пользователя
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(50), nullable=False)
-    cart = db.relationship('CartItem', backref='user', lazy=True)  # Связь с корзиной
 
-# Модель товара в корзине
-class CartItem(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    product_name = db.Column(db.String(100), nullable=False)
-    quantity = db.Column(db.Integer, default=1)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+# Инициализация базы данных
+def init_db():
+    with closing(connect_db()) as db:
+        with app.open_resource('schema.sql', mode='r') as f:
+            db.cursor().executescript(f.read())
+        db.commit()
 
-# Создаём таблицы в БД
+
+def connect_db():
+    return sqlite3.connect(DATABASE)
+
+
+def get_db():
+    db = connect_db()
+    db.row_factory = sqlite3.Row
+    return db
+
+
+# Создаем файл schema.sql с SQL-запросами для создания таблиц
+with open('schema.sql', 'w') as f:
+    f.write("""
+    CREATE TABLE IF NOT EXISTS user (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL
+    );
+
+CREATE TABLE IF NOT EXISTS product (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    description TEXT,
+    price REAL NOT NULL,
+    seller_id INTEGER,  -- Убрали NOT NULL
+    FOREIGN KEY (seller_id) REFERENCES user (id)
+);
+
+    CREATE TABLE IF NOT EXISTS cart_item (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        product_id INTEGER NOT NULL,
+        quantity INTEGER DEFAULT 1,
+        user_id INTEGER NOT NULL,
+        FOREIGN KEY (product_id) REFERENCES product (id),
+        FOREIGN KEY (user_id) REFERENCES user (id)
+    );
+    """)
+
+# Инициализируем базу данных
 with app.app_context():
-    db.create_all()
+    init_db()
 
-# Товары
-products = [
-    {'id': 1, 'name': 'Yellow Evil T-shirt', 'price': 20},
-    {'id': 2, 'name': 'Gray Evil T-shirt', 'price': 22},
-    {'id': 3, 'name': 'Green Evil T-shirt', 'price': 18}
-]
+    # Добавляем тестовые товары, если их нет
+    db = get_db()
+    if not db.execute("SELECT id FROM product LIMIT 1").fetchone():
+        test_products = [
+            ('Yellow Evil T-shirt', 'Cool yellow t-shirt', 20),
+            ('Gray Evil T-shirt', 'Awesome gray t-shirt', 22),
+            ('Green Evil T-shirt', 'Amazing green t-shirt', 18)
+        ]
+        db.executemany("INSERT INTO product (name, description, price) VALUES (?, ?, ?)", test_products)
+        db.commit()
+
+
+# Вспомогательные функции
+def get_products():
+    db = get_db()
+    return db.execute("SELECT * FROM product").fetchall()
+
+
+def get_product(product_id):
+    db = get_db()
+    return db.execute("SELECT * FROM product WHERE id = ?", (product_id,)).fetchone()
+
+
+# Маршруты
+@app.route('/')
+def home():
+    products = get_products()
+    return render_template('index.html', products=products)
+
+
+@app.route('/prereg')
+def prereg():
+    if 'user_id' not in session:
+        return render_template('prereg.html')
+    return redirect(url_for('profile'))
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -40,17 +105,17 @@ def register():
         username = request.form['username']
         password = request.form['password']
 
-        # Проверяем, нет ли уже такого пользователя
-        existing_user = User.query.filter_by(username=username).first()
+        db = get_db()
+        existing_user = db.execute("SELECT id FROM user WHERE username = ?", (username,)).fetchone()
         if existing_user:
             return render_template('register_finish.html')
 
-        # Создаём нового пользователя
-        new_user = User(username=username, password=password)
-        db.session.add(new_user)
-        db.session.commit()
+        db.execute("INSERT INTO user (username, password) VALUES (?, ?)", (username, password))
+        db.commit()
 
-        return redirect(url_for('login'))
+        user = db.execute("SELECT id FROM user WHERE username = ?", (username,)).fetchone()
+        session['user_id'] = user['id']
+        return redirect(url_for('profile'))
 
     return render_template('register.html')
 
@@ -61,13 +126,13 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        user = User.query.filter_by(username=username, password=password).first()
-
+        db = get_db()
+        user = db.execute("SELECT id FROM user WHERE username = ? AND password = ?",
+                          (username, password)).fetchone()
         if user:
-            session['user_id'] = user.id  # Сохраняем ID в сессии
+            session['user_id'] = user['id']
             return redirect(url_for('profile'))
-        else:
-            return "Неверный логин или пароль!"
+        return "Неверный логин или пароль!"
 
     return render_template('login.html')
 
@@ -76,75 +141,96 @@ def login():
 def profile():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-
-    user = User.query.get(session['user_id'])
     return render_template('account.html')
 
-
-@app.route('/add_to_cart', methods=['POST'])
-def add_to_cart():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    product_name = request.form['product_name']
-    user = User.query.get(session['user_id'])
-
-    # Проверяем, есть ли товар уже в корзине
-    existing_item = CartItem.query.filter_by(product_name=product_name, user_id=user.id).first()
-
-    if existing_item:
-        existing_item.quantity += 1
-    else:
-        new_item = CartItem(product_name=product_name, user_id=user.id)
-        db.session.add(new_item)
-
-    db.session.commit()
-    return "Товар добавлен в корзину!"
-
-
-@app.route('/cart')
-def view_cart():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    user = User.query.get(session['user_id'])
-    cart_items = user.cart
-    return render_template('cart.html', cart_items=cart_items)
 
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('prereg'))
 
-@app.route('/')
-def home():
-    return render_template('index.html')
-
-@app.route('/prereg')
-def prereg():
-    if 'user_id' not in session:
-        return render_template('prereg.html')
-
-
-    user = User.query.get(session['user_id'])
-    return render_template('account.html')
-
 
 @app.route('/catalog')
 def catalog():
+    products = get_products()
     return render_template('catalog.html', products=products)
+
+
+@app.route('/product_view/<int:product_id>', methods=['GET', 'POST'])
+def product_view(product_id):
+    con = sqlite3.connect("instance/marketplace.db")
+    cur = con.cursor()
+    product_data = cur.execute("""SELECT name, description, price
+     FROM product WHERE id = ?""", (product_id,)).fetchall()
+    return render_template('product.html',
+                           product_data=product_data[0])
+
+@app.route('/add_to_cart/<int:product_id>')
+def add_to_cart(product_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    db = get_db()
+    product = get_product(product_id)
+    if not product:
+        return "Товар не найден", 404
+
+    # Проверяем, есть ли товар уже в корзине
+    existing_item = db.execute(
+        "SELECT id, quantity FROM cart_item WHERE product_id = ? AND user_id = ?",
+        (product_id, session['user_id'])
+    ).fetchone()
+
+    if existing_item:
+        db.execute(
+            "UPDATE cart_item SET quantity = quantity + 1 WHERE id = ?",
+            (existing_item['id'],)
+        )
+    else:
+        db.execute(
+            "INSERT INTO cart_item (product_id, user_id, quantity) VALUES (?, ?, 1)",
+            (product_id, session['user_id'])
+        )
+
+    db.commit()
+    return redirect(url_for('cart'))
+
+
+@app.route('/cart')
+def cart():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    db = get_db()
+    cart_items = db.execute("""
+        SELECT cart_item.id, cart_item.quantity, product.id as product_id, 
+               product.name, product.price 
+        FROM cart_item 
+        JOIN product ON cart_item.product_id = product.id
+        WHERE cart_item.user_id = ?
+    """, (session['user_id'],)).fetchall()
+
+    total = sum(item['price'] * item['quantity'] for item in cart_items)
+    return render_template('cart.html', cart_items=cart_items, total=total)
+
+
+@app.route('/remove_from_cart/<int:item_id>')
+def remove_from_cart(item_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    db = get_db()
+    db.execute("DELETE FROM cart_item WHERE id = ? AND user_id = ?",
+               (item_id, session['user_id']))
+    db.commit()
+    return redirect(url_for('cart'))
+
 
 @app.route('/search')
 def search():
-    query = request.args.get('q', '')
-    # Пример "поиска" по товарам — просто фильтруем по вхождению
-    products = [
-        "Rollercoaster T-shirt",
-        "Destruct-inator",
-        "Deflate-inator",
-        "Age Accelerator-inator"
-    ]
-    results = [p for p in products if query.lower() in p.lower()]
+    query = request.args.get('q', '').lower()
+    products = get_products()
+    results = [p for p in products if query in p['name'].lower()]
     return render_template('search_results.html', query=query, results=results)
 
 
