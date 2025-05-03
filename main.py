@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 import logging
-from contextlib import closing
 
 # Настройка приложения
 app = Flask(__name__)
@@ -11,84 +10,23 @@ DATABASE = 'instance/marketplace.db'
 # Настройка логирования
 logging.basicConfig(level=logging.DEBUG)
 
-
-# Инициализация базы данных
-def init_db():
-    with closing(connect_db()) as db:
-        with app.open_resource('schema.sql', mode='r') as f:
-            db.cursor().executescript(f.read())
-        db.commit()
-
-
-def connect_db():
-    return sqlite3.connect(DATABASE)
-
-
-def get_db():
-    db = connect_db()
-    db.row_factory = sqlite3.Row
-    return db
-
-
-# Создаем файл schema.sql с SQL-запросами для создания таблиц
-with open('schema.sql', 'w') as f:
-    f.write("""
-    CREATE TABLE IF NOT EXISTS user (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
-    );
-
-CREATE TABLE IF NOT EXISTS product (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    description TEXT,
-    price REAL NOT NULL,
-    seller_id INTEGER,  -- Убрали NOT NULL
-    FOREIGN KEY (seller_id) REFERENCES user (id)
-);
-
-    CREATE TABLE IF NOT EXISTS cart_item (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        product_id INTEGER NOT NULL,
-        quantity INTEGER DEFAULT 1,
-        user_id INTEGER NOT NULL,
-        FOREIGN KEY (product_id) REFERENCES product (id),
-        FOREIGN KEY (user_id) REFERENCES user (id)
-    );
-    """)
-
-# Инициализируем базу данных
-with app.app_context():
-    init_db()
-
-    # Добавляем тестовые товары, если их нет
-    db = get_db()
-    if not db.execute("SELECT id FROM product LIMIT 1").fetchone():
-        test_products = [
-            ('Yellow Evil T-shirt', 'Cool yellow t-shirt', 20),
-            ('Gray Evil T-shirt', 'Awesome gray t-shirt', 22),
-            ('Green Evil T-shirt', 'Amazing green t-shirt', 18)
-        ]
-        db.executemany("INSERT INTO product (name, description, price) VALUES (?, ?, ?)", test_products)
-        db.commit()
-
-
-# Вспомогательные функции
-def get_products():
-    db = get_db()
-    return db.execute("SELECT * FROM product").fetchall()
-
-
-def get_product(product_id):
-    db = get_db()
-    return db.execute("SELECT * FROM product WHERE id = ?", (product_id,)).fetchone()
+con = sqlite3.connect("instance/marketplace.db")
+cur = con.cursor()
+products = []
+try:
+    for product in cur.execute("""SELECT * FROM product""").fetchall():
+        products.append({'id': product[0],
+                         'name': product[1],
+                         'descr': product[2],
+                         'price': product[3]})
+except Exception as e:
+    products = []
+    logging.info(e)
 
 
 # Маршруты
 @app.route('/')
 def home():
-    products = get_products()
     return render_template('index.html', products=products)
 
 
@@ -105,15 +43,16 @@ def register():
         username = request.form['username']
         password = request.form['password']
 
-        db = get_db()
-        existing_user = db.execute("SELECT id FROM user WHERE username = ?", (username,)).fetchone()
+        con = sqlite3.connect("instance/marketplace.db")
+        cur = con.cursor()
+        existing_user = cur.execute("SELECT id FROM user WHERE username = ?", (username,)).fetchone()
         if existing_user:
             return render_template('register_finish.html')
 
-        db.execute("INSERT INTO user (username, password) VALUES (?, ?)", (username, password))
-        db.commit()
+        cur.execute("INSERT INTO user (username, password) VALUES (?, ?)", (username, password))
+        cur.commit()
 
-        user = db.execute("SELECT id FROM user WHERE username = ?", (username,)).fetchone()
+        user = cur.execute("SELECT id FROM user WHERE username = ?", (username,)).fetchone()
         session['user_id'] = user['id']
         return redirect(url_for('profile'))
 
@@ -126,8 +65,9 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        db = get_db()
-        user = db.execute("SELECT id FROM user WHERE username = ? AND password = ?",
+        con = sqlite3.connect("instance/marketplace.db")
+        cur = con.cursor()
+        user = cur.execute("SELECT id FROM user WHERE username = ? AND password = ?",
                           (username, password)).fetchone()
         if user:
             session['user_id'] = user['id']
@@ -152,7 +92,6 @@ def logout():
 
 @app.route('/catalog')
 def catalog():
-    products = get_products()
     return render_template('catalog.html', products=products)
 
 
@@ -170,29 +109,29 @@ def add_to_cart(product_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    db = get_db()
-    product = get_product(product_id)
+    con = sqlite3.connect("instance/marketplace.db")
+    cur = con.cursor()
     if not product:
         return "Товар не найден", 404
 
     # Проверяем, есть ли товар уже в корзине
-    existing_item = db.execute(
+    existing_item = cur.execute(
         "SELECT id, quantity FROM cart_item WHERE product_id = ? AND user_id = ?",
         (product_id, session['user_id'])
     ).fetchone()
 
     if existing_item:
-        db.execute(
+        cur.execute(
             "UPDATE cart_item SET quantity = quantity + 1 WHERE id = ?",
             (existing_item['id'],)
         )
     else:
-        db.execute(
+        cur.execute(
             "INSERT INTO cart_item (product_id, user_id, quantity) VALUES (?, ?, 1)",
             (product_id, session['user_id'])
         )
 
-    db.commit()
+    cur.commit()
     return redirect(url_for('cart'))
 
 
@@ -201,8 +140,9 @@ def cart():
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    db = get_db()
-    cart_items = db.execute("""
+    con = sqlite3.connect("instance/marketplace.db")
+    cur = con.cursor()
+    cart_items = cur.execute("""
         SELECT cart_item.id, cart_item.quantity, product.id as product_id, 
                product.name, product.price 
         FROM cart_item 
@@ -219,17 +159,17 @@ def remove_from_cart(item_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    db = get_db()
-    db.execute("DELETE FROM cart_item WHERE id = ? AND user_id = ?",
+    con = sqlite3.connect("instance/marketplace.db")
+    cur = con.cursor()
+    cur.execute("DELETE FROM cart_item WHERE id = ? AND user_id = ?",
                (item_id, session['user_id']))
-    db.commit()
+    cur.commit()
     return redirect(url_for('cart'))
 
 
 @app.route('/search')
 def search():
     query = request.args.get('q', '').lower()
-    products = get_products()
     results = [p for p in products if query in p['name'].lower()]
     return render_template('search_results.html', query=query, results=results)
 
