@@ -1,15 +1,135 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Вход</title>
-</head>
+    <meta charset="UTF-8">
+    <title>Вход или регистрация</title>
+    <style>
+        @font-face {
+    font-family: 'SFPro';
+    src: url('/static/font/SFProText-Heavy.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+ body {
+    font-family: 'SFPro', sans-serif;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), url('https://i.ytimg.com/vi/yRVY3_nxWn8/maxresdefault.jpg') center/cover no-repeat;
+    margin: 0;
+    background-color: #1B1B1B;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    height: 700;
+    justify-content: center;
+    align-items: center;
+}
+
+.welcome-box {
+    display: flex;
+    height: 700;
+    background-color: #3a3a3a;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 2px solid #9f00ff;
+    box-shadow: 0 0 20px #9f00ff33;
+}
+
+.login-box {
+    display: flex;
+    height: 700;
+    background-color: #3a3a3a;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 2px solid #9f00ff;
+    box-shadow: 0 0 20px #9f00ff33;
+}
+
+.login-box .left, .login-box .right {
+    margin-bottom: 10px;
+    padding: 40px;
+    width: 220px;
+    text-align: center;
+}
+
+.login-box .left {
+    background-color: #2f2f2f;
+    border-right: 1px solid #9f00ff;
+}
+
+.login-box .right {
+    background-color: #444;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #9f00ff;
+    background-color: transparent;
+    color: white;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.login-box input::placeholder {
+    color: #ccc;
+    font-weight: bold;
+}
+
+.login-box .btn {
+    margin-top: 10px;
+    padding: 10px;
+    background: transparent;
+    color: white;
+    border: 2px solid #9f00ff;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login-box .btn:hover {
+    background-color: #9f00ff;
+    color: black;
+}
+.purple {
+    color: #9f00ff;
+}
+
+.green {
+    color: #a0ff00;
+}
+
+.white {
+    color: #FFFFFF;
+}
+
+    </style>
 <body>
-    <h1>Вход</h1>
-    <form method="POST" action="/login">
-        <input type="text" name="username" placeholder="Логин" required><br>
-        <input type="password" name="password" placeholder="Пароль" required><br>
-        <button type="submit">Войти</button>
-    </form>
-    <p>Нет аккаунта? <a href="/register">Зарегистрируйтесь</a></p>
+<div class="container">
+    <div class="login-box">
+        <div class="left">
+            <p><b> <br> <br> <br> </b><span class="green">**</span><span class="white">LOG IN</span><span class="green">**</span><br><span
+                    class="purple">&lt;&lt;&lt;&lt;&lt;</span> <span
+                    class="purple">&gt;&gt;&gt;&gt;&gt;</span></p>
+        </div>
+        <div class="right">
+            <form action="/login" method="post">
+                <span class="green">*</span><span class="white">USERNAME</span><br>
+                <input type="text" id="username" name="username" placeholder="USER"><br><br>
+                <span class="green">*</span><span class="white">PASSWORD</span><br>
+                <input type="password" id="password" name="password" placeholder="PASSWORD"><br><br>
+                <button type="submit" class="btn">ENTER</button>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

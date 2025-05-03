@@ -1,145 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Evil Shop</title>
-  <style>
-    @font-face {
-      font-fam: Evil;
-      scr: url('https://mail.yandex.ru/message_part/ofont.ru_Ebbe.ttf?_uid=438318209&name=ofont.ru_Ebbe.ttf&hid=1.1&ids=189432659326271928')
-      }
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background-color: #1B1B1B;
-    }
-    header {
-      background-color: #111;
-      color: white;
-      padding: 30px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    header nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 10px;
-      font-weight: bold;
-    }
-    .logo {
-      background: url('https://mail.yandex.ru//message_part/Frame+99.png?_uid=438318209&hid=1.1.2&ids=189432659326271925&name=Frame+99.png&yandex_class=yandex_inline_content_320.mail:438318209.E13800296:19289305394420134649458862018_1.1.2_189432659326271925') center/cover no-repeat;
-      height : 90px;
-      width : 55px;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-<!--    .logo h3 {-->
-<!--      font-size: 36px;-->
-<!--      margin-center: 0px;-->
-<!--      color: white;-->
-<!--      text-align:right;-->
-    }
-    .banner {
-      background: url('https://i.ytimg.com/vi/yRVY3_nxWn8/maxresdefault.jpg') center/cover no-repeat;
-      height: 900px;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-    .banner h1 {
-      font-size: 36px;
-      color: black;
-      margin-bottom: -500px;
-      background-color: white;
-      font-fam: Evil;
-    }
-<!--    .banner button {-->
-<!--      padding: 10px 20px;-->
-<!--      background-color: #333;-->
-<!--      color: white;-->
-<!--      border: none;-->
-<!--      cursor: pointer;-->
-<!--    }-->
-    .products {
-      padding: 40px;
-      text-align: center;
-    }
-    .banner2 {
-      background: url('https://mail.yandex.ru/message_part/fon1.png?_uid=438318209&hid=1.1.2&ids=189432659326271943&name=fon1.png&yandex_class=yandex_inline_content_320.mail:438318209.E15579592:3222564313194147968141431646870_1.1.2_189432659326271943') center/cover no-repeat;
-      color: white;
-      height: 1440px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      }
-    .products h2 {
-      font-size: 36px;
-      color: white;
-      margin-bottom: 30px;
-    }
-    .product-grid {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      flex-wrap: wrap;
-    }
-    .product {
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      width: 472px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .product img {
-      width: 100%;
-    }
-  </style>
-</head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Evil Shop</title>
+    <style>
+        @font-face {
+            font-family: 'SFPro';
+            src: url('/static/font/SFPro.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'SFPro', sans-serif;
+            margin: 0;
+            background-color: #1B1B1B;
+
+        }
+        header {
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(17, 17, 17, 0)), rgba(33, 131, 185, 1);
+            height: 100px;
+            color: white;
+            padding: 30px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+            backdrop-filter: blur(5px); /* Добавляет эффект размытия для лучшего восприятия прозрачности */
+        }
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+        .logo {
+            background: url('https://mail.yandex.ru//message_part/Frame+99.png?_uid=438318209&hid=1.1.2&ids=189432659326271925&name=Frame+99.png&yandex_class=yandex_inline_content_320.mail:438318209.E13800296:19289305394420134649458862018_1.1.2_189432659326271925') center/cover no-repeat;
+            height : 90px;
+            width : 55px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .banner {
+            background: linear-gradient(to top, rgba(27, 27, 27, 1), rgba(17, 17, 17, 0)), url('https://i.ytimg.com/vi/yRVY3_nxWn8/maxresdefault.jpg') center/cover no-repeat;
+            height: 900px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .banner h1 {
+            font-size: 36px;
+            color: white;
+            margin-bottom: -500px;
+            font-fam: Evil;
+        }
+        .products {
+            padding: 40px;
+            text-align: center;
+        }
+        .banner2 {
+            background: url('https://mail.yandex.ru/message_part/Frame+122%281%29.png?_uid=438318209&name=Frame+122%281%29.png&hid=1.1&ids=189432659326271960&no_disposition=y&exif_rotate=y') center/cover no-repeat;
+            background-size: cover;
+<!--            background-attachment: fixed;-->
+            color: white;
+            min-height: 100vh;
+            height: 4520px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            padding: 40px 0;
+<!--            box-sizing: border-box;-->
+        }
+            .banner3 {
+        background: url('https://mail.yandex.ru/message_part/Frame+123.png?_uid=438318209&name=Frame+123.png&hid=1.1&ids=189432659326271962&no_disposition=y&exif_rotate=y') center/cover no-repeat;
+        height: 500px;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        }
+        .banner h2 {
+            font-size: 36px;
+            color: white;
+            margin: 0;
+            padding: 40px 0;
+            width: 100%;
+            background-color: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(17, 17, 17, 0));
+            backdrop-filter: blur(1px);
+        }
+        .product-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .product {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 472px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .product img {
+            width: 100%;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(27, 27, 27, 0.7); /* Полупрозрачный фон */
+            color: white;
+            border-radius: 12px;
+            padding: 20px 15px;
+            width: 600px;
+            margin: 30px auto;
+            backdrop-filter: blur(5px); /* Эффект размытия */
+        }
+
+        .search-container input[type="text"] {
+            border: none;
+            color: white;
+            background: transparent;
+            outline: none;
+            flex-grow: 1;
+            font-size: 16px;
+            padding-left: 15px;
+        }
+
+
+    </style>
 <body>
-  <header>
-    <div class="logo">
-    </div>
+<header>
+    <div class="logo"></div>
+    <form method="GET" action="/search">
+        <div class="search-container">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z"
+                      stroke="#333" stroke-width="2"/>
+                <path d="M22 22L16 16" stroke="#333" stroke-width="2"/>
+            </svg>
+            <input type="text" name="q" placeholder="Поиск"/>
+        </div>
+    </form>
     <nav>
-      <a href="#">Home</a>
-      <a href="#">Catalog</a>
-      <a href="/cart">Cart</a>
-      <a href="/prereg">Account</a>
+        <a href="#">Home</a>
+        <a href="#">Catalog</a>
+        <a href="/cart">Cart</a>
+        <a href="/prereg">Account</a>
     </nav>
-  </header>
+</header>
 
-  <div class="banner">
-    <h1>Let's make more evil together</h1>
-  </div>
-
-  <div class="products">
-    <h2>Featured products</h2>
+<div class="banner">
+    <h2>LET'S MAKE MORE EVIL TOGETHER</h2>
+    <h1>↓ Featured products ↓</h1>
+</div>
+<div class="banner3"></div>
+<div class="products">
     <div class="banner2">
-    <div class="product-grid">
-      <div class="product">
-        <img src="https://resize.yandex.net/mailservice?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fphineasandferb%2Fimages%2Fb%2Fbd%2FRollercoaster135.jpg%2Frevision%2Flatest%2Fscale-to-width-down%2F200%3Fcb%3D20120122101503&proxy=yes&key=2ab05fa2a5464f2559cc27ad76a50c02" alt="T-shirt 1">
-      </div>
-      <div class="product">
-        <img src="https://resize.yandex.net/mailservice?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fphineasandferb%2Fimages%2F6%2F63%2FDestruct-inator.png%2Frevision%2Flatest%2Fscale-to-width-down%2F200%3Fcb%3D20100918224313&proxy=yes&key=b10eecd112a677b94e62d47f5499176a" alt="T-shirt 2">
-      </div>
-      <div class="product">
-        <img src="https://resize.yandex.net/mailservice?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fphineasandferb%2Fimages%2Ff%2Ff2%2FHeinz_presents_his_Deflate-inator.jpg%2Frevision%2Flatest%2Fscale-to-width-down%2F200%3Fcb%3D20120203220917&proxy=yes&key=6b1810fc026385d26d427cc33cb2a470" alt="T-shirt 3">
-      </div>
-      <div class="product">
-        <img src="https://resize.yandex.net/mailservice?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fphineasandferb%2Fimages%2F9%2F9c%2FAge_Accelerator-inator.png%2Frevision%2Flatest%2Fscale-to-width-down%2F200%3Fcb%3D20100812231818&proxy=yes&key=94c684e17fc9313d44a28e8f9530d288" alt="T-shirt 4">
-      </div>
+        <div class="product-grid">
+            <div class="product">
+                <img src="https://resize.yandex.net/mailservice?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fphineasandferb%2Fimages%2Fb%2Fbd%2FRollercoaster135.jpg%2Frevision%2Flatest%2Fscale-to-width-down%2F200%3Fcb%3D20120122101503&proxy=yes&key=2ab05fa2a5464f2559cc27ad76a50c02"
+                     alt="T-shirt 1">
+            </div>
+            <div class="product">
+                <img src="https://resize.yandex.net/mailservice?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fphineasandferb%2Fimages%2F6%2F63%2FDestruct-inator.png%2Frevision%2Flatest%2Fscale-to-width-down%2F200%3Fcb%3D20100918224313&proxy=yes&key=b10eecd112a677b94e62d47f5499176a"
+                     alt="T-shirt 2">
+            </div>
+            <div class="product">
+                <img src="https://resize.yandex.net/mailservice?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fphineasandferb%2Fimages%2Ff%2Ff2%2FHeinz_presents_his_Deflate-inator.jpg%2Frevision%2Flatest%2Fscale-to-width-down%2F200%3Fcb%3D20120203220917&proxy=yes&key=6b1810fc026385d26d427cc33cb2a470"
+                     alt="T-shirt 3">
+            </div>
+            <div class="product">
+                <img src="https://resize.yandex.net/mailservice?url=https%3A%2F%2Fstatic.wikia.nocookie.net%2Fphineasandferb%2Fimages%2F9%2F9c%2FAge_Accelerator-inator.png%2Frevision%2Flatest%2Fscale-to-width-down%2F200%3Fcb%3D20100812231818&proxy=yes&key=94c684e17fc9313d44a28e8f9530d288"
+                     alt="T-shirt 4">
+            </div>
+        </div>
     </div>
-  </div>
+</div>
 
 </body>
 </html>

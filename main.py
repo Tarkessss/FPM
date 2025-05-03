@@ -43,7 +43,7 @@ def register():
         # Проверяем, нет ли уже такого пользователя
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
-            return "Пользователь уже существует!"
+            return render_template('register_finish.html')
 
         # Создаём нового пользователя
         new_user = User(username=username, password=password)
@@ -114,7 +114,7 @@ def view_cart():
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
-    return redirect(url_for('login'))
+    return redirect(url_for('prereg'))
 
 @app.route('/')
 def home():
@@ -133,6 +133,20 @@ def prereg():
 @app.route('/catalog')
 def catalog():
     return render_template('catalog.html', products=products)
+
+@app.route('/search')
+def search():
+    query = request.args.get('q', '')
+    # Пример "поиска" по товарам — просто фильтруем по вхождению
+    products = [
+        "Rollercoaster T-shirt",
+        "Destruct-inator",
+        "Deflate-inator",
+        "Age Accelerator-inator"
+    ]
+    results = [p for p in products if query.lower() in p.lower()]
+    return render_template('search_results.html', query=query, results=results)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

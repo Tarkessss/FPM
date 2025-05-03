@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search Results</title>
+</head>
+<body>
+  <h2>Результаты поиска для: "{{ query }}"</h2>
+  {% if results %}
+    <ul>
+      {% for item in results %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Ничего не найдено</p>
+  {% endif %}
+</body>
+</html>
