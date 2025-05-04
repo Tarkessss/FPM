@@ -14,7 +14,8 @@ con = sqlite3.connect("instance/marketplace.db")
 cur = con.cursor()
 products = []
 try:
-    for product in cur.execute("""SELECT * FROM product""").fetchall():
+    for product in cur.execute("""SELECT *
+                                  FROM product""").fetchall():
         products.append({'id': product[0],
                          'name': product[1],
                          'descr': product[2],
@@ -68,9 +69,9 @@ def login():
         con = sqlite3.connect("instance/marketplace.db")
         cur = con.cursor()
         user = cur.execute("SELECT id FROM user WHERE username = ? AND password = ?",
-                          (username, password)).fetchone()
+                           (username, password)).fetchone()
         if user:
-            session['user_id'] = user['id']
+            session['user_id'] = user[0]
             return redirect(url_for('profile'))
         return "Неверный логин или пароль!"
 
@@ -100,38 +101,21 @@ def product_view(product_id):
     con = sqlite3.connect("instance/marketplace.db")
     cur = con.cursor()
     product_data = cur.execute("""SELECT name, description, price
-     FROM product WHERE id = ?""", (product_id,)).fetchall()
+                                  FROM product
+                                  WHERE id = ?""", (product_id,)).fetchall()
     return render_template('product.html',
-                           product_data=product_data[0])
+                           product_data=product_data[0], product_id=product_id)
 
-@app.route('/add_to_cart/<int:product_id>')
-def add_to_cart(product_id):
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    con = sqlite3.connect("instance/marketplace.db")
-    cur = con.cursor()
-    if not product:
-        return "Товар не найден", 404
-
-    # Проверяем, есть ли товар уже в корзине
-    existing_item = cur.execute(
-        "SELECT id, quantity FROM cart_item WHERE product_id = ? AND user_id = ?",
-        (product_id, session['user_id'])
-    ).fetchone()
-
-    if existing_item:
-        cur.execute(
-            "UPDATE cart_item SET quantity = quantity + 1 WHERE id = ?",
-            (existing_item['id'],)
-        )
-    else:
-        cur.execute(
-            "INSERT INTO cart_item (product_id, user_id, quantity) VALUES (?, ?, 1)",
-            (product_id, session['user_id'])
-        )
-
-    cur.commit()
+@app.route('/addtocart/<int:product_id>')
+def addtocart(product_id):
+    product_quantity = cur.execute("""SELECT quantity FROM cart_item WHERE product_id = ? AND user_id = ?""",
+                                   (product_id, session['user_id'])).fetchone()
+    if product_quantity:
+        cur.execute("""INSERT INTO cart_item (quantity) VALUES (?) WHERE  product_id = ? AND user_id = ?""",
+                    (product_quantity + 1, product_id, session['user_id'])).fetchall()
+        return redirect(url_for('cart'))
+    cur.execute("""INSERT INTO cart_item (quantity, product_id, user_id) VALUES (?, ?, ?, ?)""",
+                (1, product_id, session['user_id'],)).fetchall()
     return redirect(url_for('cart'))
 
 
@@ -143,28 +127,13 @@ def cart():
     con = sqlite3.connect("instance/marketplace.db")
     cur = con.cursor()
     cart_items = cur.execute("""
-        SELECT cart_item.id, cart_item.quantity, product.id as product_id, 
-               product.name, product.price 
-        FROM cart_item 
-        JOIN product ON cart_item.product_id = product.id
-        WHERE cart_item.user_id = ?
-    """, (session['user_id'],)).fetchall()
+                             SELECT id, quantity, product_id
+                             FROM cart_item
+                             WHERE user_id = ?
+                             """, (session['user_id'],)).fetchall()
 
     total = sum(item['price'] * item['quantity'] for item in cart_items)
     return render_template('cart.html', cart_items=cart_items, total=total)
-
-
-@app.route('/remove_from_cart/<int:item_id>')
-def remove_from_cart(item_id):
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    con = sqlite3.connect("instance/marketplace.db")
-    cur = con.cursor()
-    cur.execute("DELETE FROM cart_item WHERE id = ? AND user_id = ?",
-               (item_id, session['user_id']))
-    cur.commit()
-    return redirect(url_for('cart'))
 
 
 @app.route('/search')
