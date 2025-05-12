@@ -24,7 +24,7 @@ except Exception as e:
     products = []
     logging.info(e)
 
-
+con.close()
 # Маршруты
 @app.route('/')
 def home():
@@ -70,6 +70,7 @@ def login():
         cur = con.cursor()
         user = cur.execute("SELECT id FROM user WHERE username = ? AND password = ?",
                            (username, password)).fetchone()
+        con.close()
         if user:
             session['user_id'] = user[0]
             return redirect(url_for('profile'))
@@ -103,19 +104,26 @@ def product_view(product_id):
     product_data = cur.execute("""SELECT name, description, price
                                   FROM product
                                   WHERE id = ?""", (product_id,)).fetchall()
+    con.close()
     return render_template('product.html',
                            product_data=product_data[0], product_id=product_id)
 
-@app.route('/addtocart/<int:product_id>')
+@app.route('/addtocart/<int:product_id>', methods=['GET', 'POST'])
 def addtocart(product_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    con = sqlite3.connect("instance/marketplace.db")
+    cur = con.cursor()
     product_quantity = cur.execute("""SELECT quantity FROM cart_item WHERE product_id = ? AND user_id = ?""",
                                    (product_id, session['user_id'])).fetchone()
     if product_quantity:
         cur.execute("""INSERT INTO cart_item (quantity) VALUES (?) WHERE  product_id = ? AND user_id = ?""",
                     (product_quantity + 1, product_id, session['user_id'])).fetchall()
+        con.close()
         return redirect(url_for('cart'))
-    cur.execute("""INSERT INTO cart_item (quantity, product_id, user_id) VALUES (?, ?, ?, ?)""",
+    cur.execute("""INSERT INTO cart_item (quantity, product_id, user_id) VALUES (?, ?, ?)""",
                 (1, product_id, session['user_id'],)).fetchall()
+    con.close()
     return redirect(url_for('cart'))
 
 
@@ -126,12 +134,22 @@ def cart():
 
     con = sqlite3.connect("instance/marketplace.db")
     cur = con.cursor()
-    cart_items = cur.execute("""
+    pre_cart_items = cur.execute("""
                              SELECT id, quantity, product_id
                              FROM cart_item
                              WHERE user_id = ?
                              """, (session['user_id'],)).fetchall()
-
+    cart_items = []
+    for i in pre_cart_items:
+        name_price = cur.execute("""SELECT name, price
+                                    FROM product
+                                    WHERE id = ?""", (i[2],)).fetchall()
+        cart_items.append({'name': name_price[0][0],
+                           'price': name_price[0][1],
+                           'quantity': i[1],
+                           'id': i[0]
+                           })
+    con.close()
     total = sum(item['price'] * item['quantity'] for item in cart_items)
     return render_template('cart.html', cart_items=cart_items, total=total)
 
