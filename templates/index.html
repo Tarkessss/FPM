@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Evil Shop</title>
     <style>
+        /* Добавляем плавную прокрутку для всей страницы */
+        html {
+            scroll-behavior: smooth;
+        }
+
         @font-face {
             font-family: 'SFPro';
             src: url('/static/font/SFPro.ttf') format('truetype');
@@ -16,7 +21,6 @@
             font-family: 'SFPro', sans-serif;
             margin: 0;
             background-color: #1B1B1B;
-
         }
         header {
             background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(17, 17, 17, 0)), rgba(33, 131, 185, 1);
@@ -28,7 +32,7 @@
             align-items: center;
             position: relative;
             z-index: 100;
-            backdrop-filter: blur(5px); /* Добавляет эффект размытия для лучшего восприятия прозрачности */
+            backdrop-filter: blur(5px);
         }
         header nav a {
             color: white;
@@ -70,7 +74,6 @@
         .banner2 {
             background: url('/static/img/banner2.png') center/cover no-repeat;
             background-size: cover;
-<!--            background-attachment: fixed;-->
             color: white;
             min-height: 100vh;
             height: 4520px;
@@ -80,17 +83,16 @@
             align-items: center;
             text-align: center;
             padding: 40px 0;
-<!--            box-sizing: border-box;-->
         }
-            .banner3 {
-        background: url('/static/img/banner3.png') center/cover no-repeat;
-        height: 500px;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
+        .banner3 {
+            background: url('/static/img/banner3.png') center/cover no-repeat;
+            height: 500px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
         .banner h2 {
             font-size: 36px;
@@ -121,15 +123,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: rgba(27, 27, 27, 0.7); /* Полупрозрачный фон */
+            background-color: rgba(27, 27, 27, 0.7);
             color: white;
             border-radius: 12px;
             padding: 20px 15px;
             width: 600px;
             margin: 30px auto;
-            backdrop-filter: blur(5px); /* Эффект размытия */
+            backdrop-filter: blur(5px);
         }
-
         .search-container input[type="text"] {
             border: none;
             color: white;
@@ -139,9 +140,8 @@
             font-size: 16px;
             padding-left: 15px;
         }
-
-
     </style>
+</head>
 <body>
 <header>
     <div class="logo"></div>
@@ -157,7 +157,7 @@
     </form>
     <nav>
         <a href="#">Home</a>
-        <a href="#">Catalog</a>
+        <a href="#banner3">Catalog</a> <!-- Изменено: ссылка ведёт на #banner3 -->
         <a href="/cart">Cart</a>
         <a href="/prereg">Account</a>
     </nav>
@@ -167,7 +167,7 @@
     <h2>LET'S MAKE MORE EVIL TOGETHER</h2>
     <h1>↓ Featured products ↓</h1>
 </div>
-<div class="banner3"></div>
+<div class="banner3" id="banner3"></div> <!-- Добавлен id для якоря -->
 <div class="products">
     <div class="banner2">
         <div class="product-grid">
@@ -183,6 +183,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>
