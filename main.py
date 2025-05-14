@@ -2,6 +2,17 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 import logging
 import os
+import hashlib
+
+
+STATIC_SALT = "123abc"
+
+def hash_password(password):
+    salted_password = STATIC_SALT + password
+    return hashlib.md5(salted_password.encode('utf-8')).hexdigest()
+
+def verify_password(password1, input_password):
+    return password1 == hash_password(input_password)
 
 app = Flask(__name__)
 app.secret_key = 'super-secret-key'
@@ -24,11 +35,9 @@ except Exception as e:
     logging.info(e)
 
 
-# Инициализация базы данных
 def init_db():
     with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
-        # Создаем таблицу пользователей
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,7 +45,6 @@ def init_db():
                 password TEXT NOT NULL
             )
         ''')
-        # Создаем таблицу товаров в корзине
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS cart_items (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -68,14 +76,14 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        password1 = hash_password(password)
+        print(f"Username: {username}, Hash: {password1}")
 
-        # Проверяем, нет ли уже такого пользователя
         existing_user = query_db('SELECT * FROM users WHERE username = ?', [username], one=True)
         if existing_user:
             return render_template('register_finish.html')
 
-        # Создаём нового пользователя
-        query_db('INSERT INTO users (username, password) VALUES (?, ?)', [username, password])
+        query_db('INSERT INTO users (username, password) VALUES (?, ?)', [username, password1])
 
         return redirect(url_for('login'))
 
@@ -87,12 +95,12 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        password1 = hash_password(password)
+        user = query_db('SELECT * FROM users WHERE username = ?',
+                        [username], one=True)
 
-        user = query_db('SELECT * FROM users WHERE username = ? AND password = ?',
-                        [username, password], one=True)
-
-        if user:
-            session['user_id'] = user['id']  # Сохраняем ID в сессии
+        if user and verify_password(user['password'], password):
+            session['user_id'] = user['id']
             return redirect(url_for('profile'))
         else:
             return "Неверный логин или пароль!"
@@ -127,7 +135,6 @@ def add_to_cart():
     product_name = request.form['product_name']
     user_id = session['user_id']
 
-    # Проверяем, есть ли товар уже в корзине
     existing_item = query_db('SELECT * FROM cart_items WHERE product_name = ? AND user_id = ?',
                              [product_name, user_id], one=True)
 
