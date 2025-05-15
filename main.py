@@ -4,39 +4,40 @@ import logging
 import os
 import hashlib
 
-STATIC_SALT = "123abc"
 
+STATIC_SALT = "123abc"
 
 def hash_password(password):
     salted_password = STATIC_SALT + password
     return hashlib.md5(salted_password.encode('utf-8')).hexdigest()
 
-
 def verify_password(password1, input_password):
     return password1 == hash_password(input_password)
 
-
 app = Flask(__name__)
 app.secret_key = 'super-secret-key'
-DATABASE = 'instance/marketplace.db'
+DATABASE = 'shop.db'
 
 logging.basicConfig(level=logging.DEBUG)
-
-
-def get_db_connection():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
+app = Flask(__name__)
+app.secret_key = 'super-secret-key'
+con = sqlite3.connect("instance/marketplace.db")
+cur = con.cursor()
+products = []
+try:
+    for product in cur.execute("""SELECT * FROM product""").fetchall():
+        products.append({'id': product[0],
+                         'name': product[1],
+                         'descr': product[2],
+                         'price': product[3]})
+except Exception as e:
+    products = []
+    logging.info(e)
 
 
 def init_db():
-    with get_db_connection() as conn:
+    with sqlite3.connect(DATABASE) as conn:
         cursor = conn.cursor()
-        # Проверяем, существует ли таблица product (из marketplace)
-        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='product'")
-        product_table_exists = cursor.fetchone() is not None
-
-        # Создаем таблицы users и cart_items, если их нет
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -56,38 +57,18 @@ def init_db():
         conn.commit()
 
 
-# Инициализация базы данных при запуске
-init_db()
+if not os.path.exists(DATABASE):
+    init_db()
 
 
 def query_db(query, args=(), one=False):
-    with get_db_connection() as conn:
+    with sqlite3.connect(DATABASE) as conn:
+        conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         cursor.execute(query, args)
         result = cursor.fetchall()
         conn.commit()
         return (result[0] if result else None) if one else result
-
-
-def load_products():
-    products = []
-    try:
-        with get_db_connection() as conn:
-            cursor = conn.cursor()
-            for product in cursor.execute("SELECT * FROM product").fetchall():
-                products.append({
-                    'id': product['id'],
-                    'name': product['name'],
-                    'descr': product['description'],
-                    'price': product['price']
-                })
-    except Exception as e:
-        logging.info(f"Error loading products: {e}")
-        products = []
-    return products
-
-
-products = load_products()
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -129,10 +110,12 @@ def login():
 
 @app.route('/product_view/<int:product_id>', methods=['GET', 'POST'])
 def product_view(product_id):
-    product_data = query_db("SELECT name, description, price FROM product WHERE id = ?", (product_id,), one=True)
-    if product_data:
-        return render_template('product.html', product_data=product_data)
-    return "Product not found", 404
+    con = sqlite3.connect("instance/marketplace.db")
+    cur = con.cursor()
+    product_data = cur.execute("""SELECT name, description, price
+     FROM product WHERE id = ?""", (product_id,)).fetchall()
+    return render_template('product.html',
+                           product_data=product_data[0])
 
 
 @app.route('/profile')
@@ -169,15 +152,12 @@ def add_to_cart():
 def view_cart():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-
-    user_id = session['user_id']
-    cart_items = query_db('''
-        SELECT cart_items.*, product.description, product.price 
-        FROM cart_items
-        JOIN product ON cart_items.product_name = product.name
-        WHERE cart_items.user_id = ?
-    ''', [user_id])
-
+    cart_items = []
+    if 'cart' in session:
+        for pid in session['cart']:
+            for product in products:
+                if product['id'] == pid:
+                    cart_items.append(product)
     return render_template('cart.html', cart_items=cart_items)
 
 
@@ -209,7 +189,14 @@ def catalog():
 @app.route('/search')
 def search():
     query = request.args.get('q', '')
-    results = [p for p in products if query.lower() in p['name'].lower()]
+    # Пример "поиска" по товарам — просто фильтруем по вхождению
+    products = [
+        "Rollercoaster T-shirt",
+        "Destruct-inator",
+        "Deflate-inator",
+        "Age Accelerator-inator"
+    ]
+    results = [p for p in products if query.lower() in p.lower()]
     return render_template('search_results.html', query=query, results=results)
 
 
