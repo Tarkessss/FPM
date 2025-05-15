@@ -51,10 +51,10 @@ def register():
             return render_template('register_finish.html')
 
         cur.execute("INSERT INTO user (username, password) VALUES (?, ?)", (username, password))
-        cur.commit()
+        con.commit()
 
         user = cur.execute("SELECT id FROM user WHERE username = ?", (username,)).fetchone()
-        session['user_id'] = user['id']
+        session['user_id'] = user[0]
         return redirect(url_for('profile'))
 
     return render_template('register.html')
@@ -108,23 +108,35 @@ def product_view(product_id):
     return render_template('product.html',
                            product_data=product_data[0], product_id=product_id)
 
+
 @app.route('/addtocart/<int:product_id>', methods=['GET', 'POST'])
 def addtocart(product_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    con = sqlite3.connect("instance/marketplace.db")
-    cur = con.cursor()
-    product_quantity = cur.execute("""SELECT quantity FROM cart_item WHERE product_id = ? AND user_id = ?""",
-                                   (product_id, session['user_id'])).fetchone()
-    if product_quantity:
-        cur.execute("""INSERT INTO cart_item (quantity) VALUES (?) WHERE  product_id = ? AND user_id = ?""",
-                    (product_quantity + 1, product_id, session['user_id'])).fetchall()
-        con.close()
+
+    try:
+        con = sqlite3.connect("instance/marketplace.db")
+        cur = con.cursor()
+        cur.execute(
+            """SELECT quantity FROM cart_item WHERE product_id = ? AND user_id = ?""",
+            (product_id, session['user_id']))
+        product_quantity = cur.fetchone()
+        if product_quantity:
+            cur.execute(
+                """UPDATE cart_item SET quantity = ? WHERE product_id = ? AND user_id = ?""",
+                (product_quantity[0] + 1, product_id, session['user_id']))
+        else:
+            cur.execute(
+                """INSERT INTO cart_item (quantity, product_id, user_id) VALUES (?, ?, ?)""",
+                (1, product_id, session['user_id']))
+        con.commit()
         return redirect(url_for('cart'))
-    cur.execute("""INSERT INTO cart_item (quantity, product_id, user_id) VALUES (?, ?, ?)""",
-                (1, product_id, session['user_id'],)).fetchall()
-    con.close()
-    return redirect(url_for('cart'))
+
+    except Exception as e:
+        logging.error(f"Error adding to cart: {e}")
+        return "Произошла ошибка при добавлении товара в корзину"
+    finally:
+        con.close()
 
 
 @app.route('/cart')
