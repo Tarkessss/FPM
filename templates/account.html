@@ -2,95 +2,87 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Welcome Page</title>
+    <title>Account Created - Evil Mode</title>
     <style>
         body {
+            background: url('/static/img/bg001.png') center/cover no-repeat;
             margin: 0;
-            padding: 0;
-            background-color: #1c1c1c;
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
+            background-color: #111;
             color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
         .container {
             display: flex;
-            justify-content: space-around;
             align-items: center;
-            height: 100vh;
-            padding: 0 50px;
+            gap: 50px;
         }
 
-        .text {
-            max-width: 60%;
-            font-size: 178px;
-            font-weight: bold;
-        }
-
-        .profile {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .avatar {
-            width: 830px;
-            height: 830px;
-            background: linear-gradient(135deg, #8000ff, #cc00ff);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .avatar img {
-            width: 1000px;
-            height: 1000px;
-        }
-
-        .buttons {
-            margin-top: 40px;
-            display: flex;
-            gap: 60px;
-        }
-
-        .button {
-            background: #8000ff;
-            border: none;
+        .card {
+            background: linear-gradient(to bottom right, #4b006e, #1f0034);
+            padding: 40px;
             border-radius: 20px;
-            padding: 10px 150px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: background 0.3s;
+            text-align: center;
+            width: 300px;
         }
 
-        .button:hover {
-            background: #a600ff;
+        .card img.logo {
+            width: 100px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+
+        .card p {
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .card button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .right-side {
+            text-align: left;
+            color: white;
+        }
+
+        .right-side img.character {
+            max-height: 400px;
+        }
+
+        .right-side .quote {
+            font-size: 24px;
+            font-weight: bold;
+            white-space: pre-line;
         }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="text">
-        Hello<br>
-        username<br>
-        your in our<br>
-        Evil shoop
-    </div>
-
-    <div class="profile">
-        <div class="avatar">
-            <img src="https://mail.yandex.ru/message_part/Group+2087327983.png?_uid=438318209&hid=1.1.2&ids=189432659326271948&name=Group+2087327983.png&yandex_class=yandex_inline_content_320.mail:438318209.E13986134:1580030248146822501830954146950_1.1.2_189432659326271948" alt="User Icon">
+    <div class="container">
+        <div class="card">
+            <img class="logo" src="/static/img/logo1.png" alt="FPM Logo">
+            <p>Thanks for creating<br>account, I’ve already<br>stolen your data</p>
+            <button onclick="location.href='/'">HOME</button>
+            <button onclick="location.href='/logout'">LEAVE</button>
         </div>
-
-        <div class="buttons">
-            <button class="button" onclick="location.href='logout'">Выйти</button>
-            <button class="button" onclick="location.href='/'">Главная</button>
+        <div class="right-side">
+            <img class="character" src="/static/img/doofenshmirtz.png" alt="Doofenshmirtz">
+            <div class="quote">LET’S MAKE MORE<br>EVIL TOGETHER</div>
         </div>
     </div>
-</div>
-
 </body>
 </html>
