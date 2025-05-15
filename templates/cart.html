@@ -7,9 +7,14 @@
     <h1>Ваша корзина</h1>
     <ul>
         {% for item in cart_items %}
-            <li>{{ item.product_name }} ({{ item.quantity }})</li>
+            <div class="product">
+                <p class="cart_product_name">{{item['name']}}</p>
+                <p class="cart_product_name">{{item['quantity']}}</p>
+            </div>
         {% endfor %}
     </ul>
+    <p>{{ total }}</p>
+    <button>Купить</button>
     <a href="/profile">Назад в профиль</a>
 </body>
 </html>

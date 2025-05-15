@@ -79,7 +79,9 @@
         <div class="product-description">
             {{product_data[1]}}
         </div>
-        <button class="buy-button">Добавить в корзину</button>
+        <form method="POST" action="/addtocart/{{ product_id }}">
+            <button class="buy-button">Добавить в корзину</button>
+        </form>
     </div>
 </div>
 
