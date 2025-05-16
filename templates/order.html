@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оформление заказа</title>
+    <style>
+        @font-face {
+            font-family: 'SFPro';
+            src: url('https://fonts.cdnfonts.com/css/sf-pro-display') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'SFPro', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-image: url('static/img/banner2.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-color: #1F1F1F;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 25px;
+            background-color: #363636;
+            border-radius: 10px;
+            border: 1px solid #4a2a8a;
+        }
+
+        h1, h2 {
+            color: #9d6cff;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        h2 {
+            border-bottom: 2px solid #4a2a8a;
+            padding-bottom: 10px;
+        }
+
+        .products-section {
+            background-color: #424242;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 5px solid #6a3093;
+        }
+
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #4a2a8a;
+        }
+
+        .product-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .delivery-form {
+            background-color: #424242;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 5px solid #6a3093;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #b388ff;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #4a2a8a;
+            border-radius: 6px;
+            font-size: 16px;
+            background-color: #505050;
+            color: #ffffff;
+            font-family: 'SFPro', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #9d6cff;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .order-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background-color: #6a3093;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 30px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'SFPro', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        .order-btn:hover {
+            background-color: #4a2a8a;
+        }
+
+        .footer-note {
+            font-size: 13px;
+            color: #b0b0b0;
+            text-align: center;
+            padding: 15px;
+            background-color: #424242;
+            border-radius: 6px;
+            border-top: 2px solid #4a2a8a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Оформление заказа</h1>
+
+        <div class="products-section">
+            <h2>Ваши товары</h2>
+            {% for item in cart_items %}
+                <div class="product_item">
+                    <span class="cart_product_name">{{item['name']}}</span>
+                    <span class="cart_product_price">{{item['price']}}</span>
+                </div>
+            {% endfor %}
+            <div class="total_price">
+                <span>Итого:</span>
+                <span>{{total_price}}</span>
+            </div>
+        </div>
+
+        <div class="delivery-form">
+            <h2>Данные для доставки</h2>
+            <form method="POST" action="/create_order">
+                <div class="form-group">
+                    <label for="name">ФИО получателя:</label>
+                    <input type="text" id="name" name="name" placeholder="Иванов Иван Иванович" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Контактный телефон:</label>
+                    <input type="tel" id="phone" name="phone" placeholder="+7 (XXX) XXX-XX-XX" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Адрес доставки:</label>
+                    <input type="text" id="address" name="address" placeholder="Город, улица, дом, квартира" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="comment">Комментарий к заказу:</label>
+                    <textarea id="comment" name="comment" placeholder="Укажите удобное время доставки или другие пожелания"></textarea>
+                </div>
+
+                <button type="submit" class="order-btn">Подтвердить заказ</button>
+            </form>
+        </div>
+
+        <div class="footer-note">
+            <p>Оплата при доставке(Если мы что то привезем, конечно).</p>
+        </div>
+    </div>
+</body>
+</html>

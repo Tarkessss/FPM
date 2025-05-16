@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>This isn't working yet</title>
+    <style>
+        @font-face {
+            font-family: 'SFPro';
+            src: url('/static/font/SFPro.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            background-image: url('static/img/error2.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-color: #1F1F1F;
+            margin: 0;
+            padding: 0;
+        }
+
+        .back-button {
+            position: fixed;
+            left: 2%;
+            bottom: 3%;
+            background-color: #8a2be2;
+            color: white;
+            padding: 1.5% 3.5%;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            font-size: 1.5vw;
+            z-index: 1000;
+            min-width: 8%;
+            min-height: 5%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-button:hover {
+            background-color: #7b1fa2;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        @media (max-width: 768px) {
+            .back-button {
+                font-size: 2.5vw;
+                padding: 2% 5%;
+                min-width: 15%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="/" class="back-button"><- Назад</a>
+</body>
+</html>

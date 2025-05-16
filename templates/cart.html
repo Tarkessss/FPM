@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Корзина</title>
+    <title>Cart</title>
 </head>
 <body>
     <h1>Ваша корзина</h1>
@@ -10,11 +10,14 @@
             <div class="product">
                 <p class="cart_product_name">{{item['name']}}</p>
                 <p class="cart_product_name">{{item['quantity']}}</p>
+                <a href="/not_working">Удалить</a>
             </div>
         {% endfor %}
     </ul>
     <p>{{ total }}</p>
-    <button>Купить</button>
-    <a href="/profile">Назад в профиль</a>
+    <a href="/ordering" class="buy">Купить</a>
+    <form method="POST" action="/">
+        <button class="back">Назад</button>
+    </form>
 </body>
 </html>
