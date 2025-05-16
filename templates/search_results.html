@@ -1,19 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Search Results</title>
+    <meta charset="UTF-8">
+    <title>404 Page</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .background {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: url("/static/img/4041.png") no-repeat center center;
+            background-size: cover;
+        }
+
+        .clickable-area {
+            position: absolute;
+            bottom: 180px; /* настрой под свой макет */
+            left: 585px;   /* настрой под свой макет */
+            width: 140px; /* настрой под слово "comic" */
+            height: 40px; /* настрой под слово "comic" */
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-  <h2>Результаты поиска для: "{{ query }}"</h2>
-  {% if results %}
-    <ul>
-      {% for item in results %}
-        <li>{{ item }}</li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>Ничего не найдено</p>
-  {% endif %}
+    <div class="background">
+        <a href="/comic1">
+            <div class="clickable-area"></div>
+        </a>
+    </div>
 </body>
 </html>

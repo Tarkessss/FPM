@@ -72,6 +72,9 @@ def query_db(query, args=(), one=False):
         conn.commit()
         return (result[0] if result else None) if one else result
 
+@app.route('/comic1')
+def comic1():
+    return render_template('comic1.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
