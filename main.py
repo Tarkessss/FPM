@@ -3,7 +3,6 @@ import sqlite3
 import logging
 import os
 import hashlib
-import yagmail
 
 STATIC_SALT = "123abc"
 
@@ -246,7 +245,7 @@ def order():
                            'quantity': i[1],
                            'id': i[0]
                            })
-    total_prices = [i['price'] for i in cart_items]
+    total_prices = [i['price']*i['quantity'] for i in cart_items]
     total_price = sum(total_prices)
     if request.method == 'POST':
         return redirect(url_for('create_order', total_price=total_price,

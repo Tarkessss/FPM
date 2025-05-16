@@ -1,23 +1,294 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Cart</title>
+  <meta charset="UTF-8">
+  <title>Ваша корзина</title>
+  <style>
+    @font-face {
+      font-family: 'SFPro';
+      src: url('/static/font/SFPro.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    body {
+      margin: 0;
+      background: #111;
+      color: white;
+      font-family: 'SFPro', sans-serif;
+    }
+
+    /* Центрируем заголовок поверх страницы */
+    h1.page-title {
+      text-align: center;
+      font-size: 48px;
+      margin: 20px 0;
+      text-shadow: 2px 2px black;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      padding: 30px;
+      box-sizing: border-box;
+    }
+
+    .cart {
+      width: 60%;
+    }
+
+    /* Убираем h1 из .cart, т.к. он выше */
+    .items {
+      /* поднимаем вниз на 40px */
+      margin-top: 15%;
+
+      max-height: 400px;
+      overflow-y: auto;
+      border: 2px solid #8000ff;
+      border-radius: 10px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .item {
+      background: #222;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px #8000ff;
+    }
+
+    .item p {
+      margin: 5px 0;
+    }
+
+    .item strong {
+      font-weight: bold;
+    }
+
+    .controls {
+      width: 35%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .buttons-group {
+      margin-top: 26%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .btn {
+      display: block;
+      text-decoration: none;
+      padding: 20px;
+      background: #333;
+      color: white;
+      font-size: 24px;
+      text-align: center;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 8px #8000ff;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background: #444;
+    }
+
+    .total {
+      font-size: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #222;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px #8000ff;
+      margin-top: 20px;
+    }
+
+    .total-title {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+              header {
+            background: linear-gradient(to bottom, rgba(166, 0, 255, 1), rgba(17, 17, 17, 1)), rgba(33, 131, 185, 1);
+            height: 100px;
+            color: white;
+            padding: 30px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+        .logo {
+            background: url('/static/img/logo.png') center/cover no-repeat;
+            height : 90px;
+            width : 55px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .banner {
+            background: linear-gradient(to top, rgba(27, 27, 27, 1), rgba(17, 17, 17, 0)), url('/static/img/df_banner.jpg') center/cover no-repeat;
+            height: 900px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .banner h1 {
+            font-size: 36px;
+            color: white;
+            margin-bottom: -500px;
+            font-fam: Evil;
+        }
+        .products {
+            padding: 40px;
+            text-align: center;
+        }
+        .banner2 {
+            background: url('/static/img/banner2.png') center/cover no-repeat;
+            background-size: cover;
+            color: white;
+            min-height: 100vh;
+            height: 4520px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            padding: 40px 0;
+        }
+        .banner3 {
+            background: url('/static/img/banner3.png') center/cover no-repeat;
+            height: 500px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .banner h2 {
+            font-size: 36px;
+            color: white;
+            margin: 0;
+            padding: 40px 0;
+            width: 100%;
+            background-color: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(17, 17, 17, 0));
+            backdrop-filter: blur(1px);
+        }
+        .product-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        .product {
+            background-color: rgba(50, 50, 50, 1);
+            padding: 20px;
+            border-radius: 8px;
+            width: 472px;
+            box-shadow: 0 0 20px rgba(166, 0, 255, 1);
+        }
+        .product img {
+            width: 100%;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(27, 27, 27, 0.7);
+            color: white;
+            border-radius: 12px;
+            padding: 20px 15px;
+            width: 600px;
+            margin: 30px auto;
+            backdrop-filter: blur(5px);
+        }
+        .search-container input[type="text"] {
+            border: none;
+            color: white;
+            background: transparent;
+            outline: none;
+            flex-grow: 1;
+            font-size: 16px;
+            padding-left: 15px;
+        }
+  </style>
 </head>
 <body>
-    <h1>Ваша корзина</h1>
-    <ul>
-        {% for item in cart_items %}
-            <div class="product">
-                <p class="cart_product_name">{{item['name']}}</p>
-                <p class="cart_product_name">{{item['quantity']}}</p>
-                <a href="/not_working">Удалить</a>
-            </div>
-        {% endfor %}
-    </ul>
-    <p>{{ total }}</p>
-    <a href="/ordering" class="buy">Купить</a>
-    <form method="POST" action="/">
-        <button class="back">Назад</button>
+<header>
+    <div class="logo"></div>
+    <form method="GET" action="/search">
+        <div class="search-container">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M10 18C14.4183 18 18 14.4183 18 10C18 5.58172 14.4183 2 10 2C5.58172 2 2 5.58172 2 10C2 14.4183 5.58172 18 10 18Z"
+                      stroke="#333" stroke-width="2"/>
+                <path d="M22 22L16 16" stroke="#333" stroke-width="2"/>
+            </svg>
+            <input type="text" name="q" placeholder="Поиск"/>
+        </div>
     </form>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/">Catalog</a>
+        <a href="/cart">Cart</a>
+        <a href="/prereg">Account</a>
+    </nav>
+</header>
+  <!-- Заголовок страницы -->
+  <h1 class="page-title">ваша корзина</h1>
+
+  <div class="container">
+
+    <!-- Левая колонка: товары -->
+    <div class="cart">
+      <div class="items">
+        {% for item in cart_items %}
+        <div class="item">
+          <p>название: <strong>{{ item['name'] }}</strong></p>
+          <p>количество: <strong>{{ item['quantity'] }}</strong></p>
+          <p>цена: <strong>{{ item['price'] }}р</strong></p>
+          <a href="/remove/{{ item['id'] }}" style="color: #f44;">Удалить</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Правая колонка: кнопки и итог -->
+    <div class="controls">
+      <div class="buttons-group">
+        <a href="/" class="btn" style="font-size:32px;">НАЗАД</a>
+        <a href="/clear" class="btn" style="font-size:32px;">ОЧИСТИТЬ</a>
+        <a href="/ordering" class="btn" style="font-size:32px;">ОПЛАТИТЬ</a>
+      </div>
+
+      <div class="total">
+        <span>цена:</span>
+        <strong>{{ total }}р</strong>
+      </div>
+      <div class="total-title">ИТОГО</div>
+    </div>
+
+  </div>
+
 </body>
 </html>
