@@ -34,7 +34,7 @@ try:
                          'price': product[3]})
 except Exception as e:
     products = []
-    logging.info(e)
+    logging.error(e)
 
 
 def init_db():

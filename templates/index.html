@@ -157,7 +157,8 @@
     </form>
     <nav>
         <a href="#">Home</a>
-        <a href="#banner3">Catalog</a> <!-- Изменено: ссылка ведёт на #banner3 -->
+        <a href="#banner3">Catalog</a>
+        <!-- Изменено: ссылка ведёт на #banner3 -->
         <a href="/cart">Cart</a>
         <a href="/prereg">Account</a>
     </nav>
@@ -175,8 +176,10 @@
             <form method="POST" action="/product_view/{{ product['id'] }}">
                 <div class="product">
                     <img src="">
-                    <p class="prodct_name">{{product['name']}}</p>
-                    <button type="submit" name="pr_button" value="{{ product['id'] }}">Подробнее</button>
+                    <p class="prodct_name">{{ product['name'] }}</p>
+                    <button type="submit" name="pr_button"
+                            value="{{ product['id'] }}">Подробнее
+                    </button>
                 </div>
             </form>
             {% endfor %}
