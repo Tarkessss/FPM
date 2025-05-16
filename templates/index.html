@@ -119,6 +119,9 @@
         .product img {
             width: 100%;
         }
+        .product_name {
+            font-color: black;
+        }
         .search-container {
             display: flex;
             align-items: center;
@@ -176,7 +179,7 @@
             <form method="POST" action="/product_view/{{ product['id'] }}">
                 <div class="product">
                     <img src="">
-                    <p class="prodct_name">{{ product['name'] }}</p>
+                    <p class="product_name">{{ product['name'] }}</p>
                     <button type="submit" name="pr_button"
                             value="{{ product['id'] }}">Подробнее
                     </button>

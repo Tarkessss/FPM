@@ -73,6 +73,11 @@ def query_db(query, args=(), one=False):
         return (result[0] if result else None) if one else result
 
 
+@app.route('/')
+def index():
+    return render_template('index.html', products=products)
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -195,11 +200,6 @@ def cart():
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('prereg'))
-
-
-@app.route('/')
-def index():
-    return render_template('index.html', products=products)
 
 
 @app.route('/prereg')
