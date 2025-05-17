@@ -184,10 +184,13 @@
             <form method="POST" action="/product_view/{{ product['id'] }}">
                 <div class="product">
                     <img src="">
-                    <p style="color: black; font-size: 200%;" class="product_name">{{ product['name'] }}</p>
-                    <p style="color: black" class="product_price">{{ product['price'] }}₽</p>
+                    <p style="color: black; font-size: 200%;"
+                       class="product_name">{{ product['name'] }}</p>
+                    <p style="color: black" class="product_price">{{
+                        product['price'] }}₽</p>
                     <button type="submit" name="pr_button"
-                            value="{{ product['id'] }}" class="detail-btn">Подробнее
+                            value="{{ product['id'] }}" class="detail-btn">
+                        Подробнее
                     </button>
                 </div>
             </form>

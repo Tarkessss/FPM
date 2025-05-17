@@ -71,9 +71,11 @@ def query_db(query, args=(), one=False):
         conn.commit()
         return (result[0] if result else None) if one else result
 
+
 @app.route('/comic1')
 def comic1():
     return render_template('comic1.html')
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -169,13 +171,15 @@ def addtocart(product_id):
         return redirect(url_for('error'))
     finally:
         con.close()
+
+
 @app.route('/clear_cart')
 def clear_cart():
     try:
         con = sqlite3.connect("instance/marketplace.db")
         cur = con.cursor()
         cur.execute("""DELETE FROM cart_item WHERE user_id = ?""",
-        (session['user_id'],))
+                    (session['user_id'],))
         con.commit()
         return redirect(url_for('cart'))
     except Exception as e:
@@ -259,7 +263,7 @@ def order():
                            'quantity': i[1],
                            'id': i[0]
                            })
-    total_prices = [i['price']*i['quantity'] for i in cart_items]
+    total_prices = [i['price'] * i['quantity'] for i in cart_items]
     total_price = sum(total_prices)
     if request.method == 'POST':
         return redirect(url_for('create_order', total_price=total_price,

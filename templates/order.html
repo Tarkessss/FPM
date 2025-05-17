@@ -139,54 +139,58 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Оформление заказа</h1>
+<div class="container">
+    <h1>Оформление заказа</h1>
 
-        <div class="products-section">
-            <h2>Ваши товары</h2>
-            {% for item in cart_items %}
-                <div class="product_item">
-                    <span class="cart_product_name">{{item['name']}} | </span>
-                    <span class="cart_product_quant">Кол-во: {{item['quantity']}} | </span>
-                    <span class="cart_product_price">Цена: {{item['price'] * item['quantity']}}</span>
-                </div>
-            {% endfor %}
-            <div class="total_price">
-                <span>Итого:</span>
-                <span>{{total_price}}</span>
-            </div>
+    <div class="products-section">
+        <h2>Ваши товары</h2>
+        {% for item in cart_items %}
+        <div class="product_item">
+            <span class="cart_product_name">{{item['name']}} | </span>
+            <span class="cart_product_quant">Кол-во: {{item['quantity']}} | </span>
+            <span class="cart_product_price">Цена: {{item['price'] * item['quantity']}}</span>
         </div>
-
-        <div class="delivery-form">
-            <h2>Данные для доставки</h2>
-            <form method="POST" action="/create_order">
-                <div class="form-group">
-                    <label for="name">ФИО получателя:</label>
-                    <input type="text" id="name" name="name" placeholder="Иванов Иван Иванович" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="phone">Контактный телефон:</label>
-                    <input type="tel" id="phone" name="phone" placeholder="+7 (XXX) XXX-XX-XX" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="address">Адрес доставки:</label>
-                    <input type="text" id="address" name="address" placeholder="Город, улица, дом, квартира" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="comment">Комментарий к заказу:</label>
-                    <textarea id="comment" name="comment" placeholder="Укажите удобное время доставки или другие пожелания"></textarea>
-                </div>
-
-                <button type="submit" class="order-btn">Подтвердить заказ</button>
-            </form>
-        </div>
-
-        <div class="footer-note">
-            <p>Оплата при доставке(Если мы что то привезем, конечно).</p>
+        {% endfor %}
+        <div class="total_price">
+            <span>Итого:</span>
+            <span>{{total_price}}</span>
         </div>
     </div>
+
+    <div class="delivery-form">
+        <h2>Данные для доставки</h2>
+        <form method="POST" action="/create_order">
+            <div class="form-group">
+                <label for="name">ФИО получателя:</label>
+                <input type="text" id="name" name="name"
+                       placeholder="Иванов Иван Иванович" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Контактный телефон:</label>
+                <input type="tel" id="phone" name="phone"
+                       placeholder="+7 (XXX) XXX-XX-XX" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Адрес доставки:</label>
+                <input type="text" id="address" name="address"
+                       placeholder="Город, улица, дом, квартира" required>
+            </div>
+
+            <div class="form-group">
+                <label for="comment">Комментарий к заказу:</label>
+                <textarea id="comment" name="comment"
+                          placeholder="Укажите удобное время доставки или другие пожелания"></textarea>
+            </div>
+
+            <button type="submit" class="order-btn">Подтвердить заказ</button>
+        </form>
+    </div>
+
+    <div class="footer-note">
+        <p>Оплата при доставке(Если мы что то привезем, конечно).</p>
+    </div>
+</div>
 </body>
 </html>
