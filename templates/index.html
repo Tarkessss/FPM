@@ -75,7 +75,7 @@
             background-size: cover;
             color: white;
             min-height: 100vh;
-            height: 4520px;
+            height: 2720px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -113,6 +113,7 @@
             padding: 20px;
             border-radius: 8px;
             width: 472px;
+            color: white;
             box-shadow: 0 0 20px rgba(166, 0, 255, 1);
         }
         .product img {
@@ -184,9 +185,9 @@
             <form method="POST" action="/product_view/{{ product['id'] }}">
                 <div class="product">
                     <img src="">
-                    <p style="color: black; font-size: 200%;"
+                    <p style="color: white; font-size: 200%;"
                        class="product_name">{{ product['name'] }}</p>
-                    <p style="color: black" class="product_price">{{
+                    <p style="color: red" class="product_price">{{
                         product['price'] }}₽</p>
                     <button type="submit" name="pr_button"
                             value="{{ product['id'] }}" class="detail-btn">
