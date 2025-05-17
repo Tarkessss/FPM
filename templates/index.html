@@ -109,11 +109,11 @@
             flex-wrap: wrap;
         }
         .product {
-            background-color: white;
+            background-color: rgba(50, 50, 50, 1);
             padding: 20px;
             border-radius: 8px;
             width: 472px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px rgba(166, 0, 255, 1);
         }
         .product img {
             width: 100%;
@@ -139,6 +139,16 @@
             font-size: 16px;
             padding-left: 15px;
         }
+
+        .detail-btn {
+            cursor: pointer;
+            background: transparent;
+            color: #a600ff;
+            border: 2px solid #a600ff;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 16 px;
+
     </style>
 </head>
 <body>
@@ -177,7 +187,7 @@
                     <p style="color: black; font-size: 200%;" class="product_name">{{ product['name'] }}</p>
                     <p style="color: black" class="product_price">{{ product['price'] }}₽</p>
                     <button type="submit" name="pr_button"
-                            value="{{ product['id'] }}">Подробнее
+                            value="{{ product['id'] }}" class="detail-btn">Подробнее
                     </button>
                 </div>
             </form>

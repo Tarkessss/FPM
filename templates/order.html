@@ -146,8 +146,9 @@
             <h2>Ваши товары</h2>
             {% for item in cart_items %}
                 <div class="product_item">
-                    <span class="cart_product_name">{{item['name']}}</span>
-                    <span class="cart_product_price">{{item['price']}}</span>
+                    <span class="cart_product_name">{{item['name']}} | </span>
+                    <span class="cart_product_quant">Кол-во: {{item['quantity']}} | </span>
+                    <span class="cart_product_price">Цена: {{item['price'] * item['quantity']}}</span>
                 </div>
             {% endfor %}
             <div class="total_price">
