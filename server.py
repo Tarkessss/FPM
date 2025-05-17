@@ -116,7 +116,7 @@ def login():
             session['user_id'] = user['id']
             return redirect(url_for('profile'))
         else:
-            return "Неверный логин или пароль!"
+            return render_template('error.html')
 
     return render_template('login.html')
 
@@ -274,7 +274,6 @@ def order():
 
 @app.route('/create_order', methods=['GET', 'POST'])
 def create_order():
-    # Передать аргументом не вышло так что снова берем из бд
     con = sqlite3.connect("instance/marketplace.db")
     cur = con.cursor()
     pre_cart_items = cur.execute("""
